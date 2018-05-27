@@ -35,7 +35,7 @@ Y = Y - Ymean * ones(1,size(Y,2));
 T = size(Y, 2);
 [U, Z, V] = svd(Y, 0);
 %plot(diag(Z));
-n = 30;
+n = 50;
 U = U(:, 1:n);
 Chat = U;
 Xhat = Z(1:n, 1:n) * V(:,1:n)';
@@ -44,13 +44,13 @@ Ahat = Xhat(:,2:T) * pinv(Xhat(:,1:(T - 1)));
 Vhat = Xhat(:,2:T) - Ahat * Xhat(:, 1:(T - 1));
 [Uv, Zv, Vv] = svd(Vhat, 0);
 %plot(diag(Zv));
-nv = 5;
+nv = 20;
 Bhat = Uv(:, 1:nv) * Zv(1:nv, 1:nv) / sqrt(T - 1);
 
-%生成avi文件
-% video = VideoWriter('result.avi');
-% video.FrameRate = 10;
-% open(video);
+% 生成avi文件
+video = VideoWriter('result.avi');
+video.FrameRate = 20;
+open(video);
 
 X = x0;
 for k = 1:2000 
@@ -60,23 +60,23 @@ for k = 1:2000
     syn_img = reshape(I,[row,col]);
     
     % 调试用
-    imshow(syn_img,[0,255]);
-    title(strcat('Frame ',num2str(k)));
-    pause(0.001);
+%     imshow(syn_img,[0,255]);
+%     title(strcat('Frame ',num2str(k)));
+%     pause(0.001);
     % 对syn_img进行处理，使之可以被写入writeVideo中
-%     for i=1:size(syn_img,1)
-%          for j=1:size(syn_img,2)
-%              
-%              syn_img(i,j)=syn_img(i,j)/255;
-%              if syn_img(i,j)<0
-%                  syn_img(i,j)=0;
-%              end
-%              if syn_img(i,j)>1
-%                  syn_img(i,j)=1;
-%              end
-%          end
-%      end
-%     writeVideo(video, syn_img);
+    for i=1:size(syn_img,1)
+         for j=1:size(syn_img,2)
+             
+             syn_img(i,j)=syn_img(i,j)/255;
+             if syn_img(i,j)<0
+                 syn_img(i,j)=0;
+             end
+             if syn_img(i,j)>1
+                 syn_img(i,j)=1;
+             end
+         end
+     end
+    writeVideo(video, syn_img);
 end
-% close(video);
+close(video);
 toc
